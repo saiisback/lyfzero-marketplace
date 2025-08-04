@@ -1,6 +1,7 @@
 import React from 'react';
 import { Web3Button, useContract, useBuyNow } from '@thirdweb-dev/react';
 import { Listing } from '@thirdweb-dev/sdk';
+import toast from 'react-hot-toast';
 
 interface PurchaseModalProps {
   listing: Listing;
@@ -11,15 +12,17 @@ const PurchaseModal: React.FC<PurchaseModalProps> = ({ listing }) => {
   const { mutate: buyNow, isLoading, error } = useBuyNow(contract);
 
   const handlePurchase = async () => {
+    const loadingToast = toast.loading('Purchasing NFT...');
     try {
       await buyNow({ 
         id: listing.id, 
         buyAmount: 1, 
         type: listing.type 
       });
-    } catch (err) {
+      toast.success('NFT purchased successfully!', { id: loadingToast });
+    } catch (err: any) {
       console.error(err);
-      alert("Error purchasing NFT");
+      toast.error(`Error purchasing NFT: ${err.message || err.toString()}`, { id: loadingToast });
     }
   };
 

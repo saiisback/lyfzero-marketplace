@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Layout from '@/components/common/Layout';
 import { ThirdwebProvider } from '@thirdweb-dev/react';
+import { UserProvider } from '@/context/UserContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,7 +28,9 @@ export default function RootLayout({
             authUrl: "/api/auth",
           }}
         >
-          <Layout>{children}</Layout>
+          <UserProvider>
+            <Layout>{children}</Layout>
+          </UserProvider>
         </ThirdwebProvider>
       </body>
     </html>

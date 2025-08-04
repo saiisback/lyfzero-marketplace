@@ -1,13 +1,19 @@
 import React from 'react';
 import { useActiveListings, useContract } from '@thirdweb-dev/react';
 import NFTCard from './NFTCard';
+import toast from 'react-hot-toast';
 
 const NFTGrid: React.FC = () => {
   const { contract } = useContract(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS, 'marketplace-v3');
-  const { data: listings, isLoading } = useActiveListings(contract);
+  const { data: listings, isLoading, error } = useActiveListings(contract);
 
   if (isLoading) {
     return <div>Loading listings...</div>;
+  }
+
+  if (error) {
+    toast.error('Error fetching listings.');
+    return <div>Error loading listings.</div>;
   }
 
   return (

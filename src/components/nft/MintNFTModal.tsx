@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useContract, useMintNFT } from '@thirdweb-dev/react';
 import { Project } from '@/types';
+import toast from 'react-hot-toast';
 
 interface MintNFTModalProps {
   project: Project;
@@ -12,11 +13,12 @@ const MintNFTModal: React.FC<MintNFTModalProps> = ({ project, onClose }) => {
   const { mutate: mintNft, isLoading, error } = useMintNFT(contract);
   const [quantity, setQuantity] = useState(1);
 
-  const handleMint = () => {
+  const handleMint = async () => {
+    const loadingToast = toast.loading('Minting NFT...');
     const metadata = {
       name: `${project.project_name} - Carbon Credit`,
       description: `This token represents one tonne of CO2e offset through the ${project.project_name}.`,
-      image: "ipfs://...", // Placeholder image
+      image: "ipfs://QmeSjSinHpPnPn5yR4bZ44xGzC6x6x6x6x6x6x6x6x6x", // Placeholder image
       external_url: `https://carboncred.io/projects/${project.id}`,
       attributes: [
         { trait_type: 'Project', value: project.project_name },
@@ -28,10 +30,17 @@ const MintNFTModal: React.FC<MintNFTModalProps> = ({ project, onClose }) => {
       ],
     };
 
-    mintNft({
-      to: project.seller_wallet_address,
-      metadata,
-    });
+    try {
+      await mintNft({
+        to: project.seller_wallet_address,
+        metadata,
+      });
+      toast.success('NFT minted successfully!', { id: loadingToast });
+      onClose();
+    } catch (err: any) {
+      console.error('Error minting NFT:', err);
+      toast.error(`Error minting NFT: ${err.message || err.toString()}`, { id: loadingToast });
+    }
   };
 
   return (
