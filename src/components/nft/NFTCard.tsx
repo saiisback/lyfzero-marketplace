@@ -1,17 +1,23 @@
 import React from 'react';
+import { ThirdwebNftMedia } from '@thirdweb-dev/react';
+import { Listing } from '@thirdweb-dev/sdk';
 
-const NFTCard: React.FC = () => {
+interface NFTCardProps {
+  listing: Listing;
+}
+
+const NFTCard: React.FC<NFTCardProps> = ({ listing }) => {
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-primary/50 transition-shadow duration-300">
-      <div className="w-full h-56 bg-gray-700"></div>
+      <ThirdwebNftMedia metadata={listing.asset} className="w-full h-56" />
       <div className="p-4">
-        <h3 className="text-lg font-bold">NFT Name</h3>
-        <p className="text-sm text-gray-400">Project Name</p>
+        <h3 className="text-lg font-bold">{listing.asset.name}</h3>
+        <p className="text-sm text-gray-400">{listing.asset.description}</p>
         <div className="mt-4 flex justify-between items-center">
-          <p className="text-lg font-bold text-primary">1.2 ETH</p>
-          <button className="bg-primary hover:bg-primary-dark text-primary-foreground font-bold py-2 px-4 rounded">
-            Buy Now
-          </button>
+          <p className="text-lg font-bold text-primary">
+            {listing.currencyValuePerToken.displayValue} {listing.currencyValuePerToken.symbol}
+          </p>
+          {/* The PurchaseModal will be triggered from the NFTDetailView */}
         </div>
       </div>
     </div>
