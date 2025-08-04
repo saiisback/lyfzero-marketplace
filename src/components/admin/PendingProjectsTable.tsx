@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Project } from '@/types';
@@ -30,11 +31,16 @@ const PendingProjectsTable: React.FC = () => {
   const handleApprove = async (project: Project) => {
     const loadingToast = toast.loading('Approving project...');
     try {
+      const nftContractAddress = process.env.NEXT_PUBLIC_NFT_COLLECTION_ADDRESS;
+      if (!nftContractAddress) {
+        throw new Error("NEXT_PUBLIC_NFT_COLLECTION_ADDRESS is not set in environment variables.");
+      }
+
       // 1. Call the grant-minter-role edge function
-      const { data, error } = await supabase.functions.invoke('grant-minter-role', {
+      const { error } = await supabase.functions.invoke('grant-minter-role', {
         body: { 
           sellerAddress: project.seller_wallet_address, 
-          nftContractAddress: process.env.NEXT_PUBLIC_NFT_COLLECTION_ADDRESS 
+          nftContractAddress: nftContractAddress
         },
       });
       if (error) throw error;

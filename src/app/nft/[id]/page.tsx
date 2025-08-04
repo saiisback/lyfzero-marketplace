@@ -1,3 +1,4 @@
+"use client";
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { useContract, useNFT } from '@thirdweb-dev/react';

@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from 'react';
 import { useContract, useMintNFT } from '@thirdweb-dev/react';
 import { Project } from '@/types';

@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useAddress } from '@thirdweb-dev/react';
 import { supabase } from '@/lib/supabase';
